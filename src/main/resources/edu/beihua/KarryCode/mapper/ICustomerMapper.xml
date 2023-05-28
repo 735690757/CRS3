@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.beihua.KarryCode.mapper.ICustomerMapper">
+    <insert id="insertNewCustomer">
+        insert into customers (customer_name, customer_password, customer_Email, customer_Phone, customer_money) values ( #{name} , #{pass} , #{email} , #{phone} , #{money} );
+    </insert>
+    <update id="updateMoneyBy_CName">
+        update car_rental3.customers set customer_money = #{money} where customer_name = #{name};
+    </update>
+
+    <select id="selectBy_CName_CPass" resultMap="CustomerResultMap">
+        select customer_id id,
+               customer_name name,
+               customer_password pass,
+               customer_Email,
+               customer_Phone,
+               customer_money
+        from customers
+        where customer_name = #{name}
+          and customer_password = #{pass};
+    </select>
+    <resultMap id="CustomerResultMap" type="edu.beihua.KarryCode.entity.Customer">
+        <id property="name" column="name" />
+        <result property="id" column="id" />
+        <result property="password" column="pass" />
+        <result property="customer_Email" column="customer_email" />
+        <result property="customer_Phone" column="customer_phone" />
+        <result property="customer_money" column="customer_money" />
+    </resultMap>
+    <select id="selectMoneyBY_CName" resultType="java.lang.Double">
+        select customer_money
+        from customers
+        where customer_name = #{name};
+    </select>
+    <select id="forgotUsername_SelectUsername" resultType="java.lang.String">
+        select customer_name
+        from customers
+        where customer_Phone = #{phone}
+          and customer_Email = #{email};
+
+    </select>
+    <select id="queryByCustomerName_fuzzy" resultMap="CustomerResultMap">
+        select customer_id id,
+               customer_name name,
+               customer_password pass,
+               customer_Email,
+               customer_Phone,
+               customer_money
+        from customers
+        where customer_name
+                  like CONCAT('%', #{name}, '%');
+    </select>
+    <select id="selectAllCustomer" resultMap="CustomerResultMap">
+        select customer_id id,
+               customer_name name,
+               customer_password pass,
+               customer_Email,
+               customer_Phone,
+               customer_money
+        from customers
+        order by customer_id
+    </select>
+    <select id="selectCustomerAcc" resultMap="CustomerResultMap">
+        select customer_id id,
+               customer_name name,
+               customer_password pass,
+               customer_Email,
+               customer_Phone,
+               customer_money
+        from customers where customer_name= #{name}
+    </select>
+</mapper>

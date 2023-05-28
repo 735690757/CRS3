@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.beihua.KarryCode.mapper.IMessageMapper">
+    <insert id="insertMessage">
+        insert into
+            car_rental3.message (customer_name,
+                                 message_date,
+                                 message_content)
+            value (#{name},#{date},#{con});
+    </insert>
+
+    <select id="selectAllMessage" resultType="edu.beihua.KarryCode.entity.Message">
+        select *
+        from car_rental3.message
+        where message_state=true;
+    </select>
+    <select id="selectAllMessageAll" resultType="edu.beihua.KarryCode.entity.Message">
+        select *
+        from car_rental3.message;
+    </select>
+</mapper>

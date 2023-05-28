@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.beihua.KarryCode.mapper.IOrderMapper">
+    <insert id="insertOrder">
+        insert into
+            orders (customer_name,
+                    Vehicle_license,
+                    order_borrowdate,
+                    order_fee,
+                    order_return)
+            value(#{customer_name},
+                  #{Vehicle_license},
+                  #{order_borrowdate},
+                  #{order_fee},
+                  #{order_return});
+    </insert>
+    <update id="updateOrderReturnDateAndSta_ByOrderId">
+        update orders
+        set orders.order_returndate = #{date},
+            orders.order_return = true where orders.order_id= #{id};
+    </update>
+    <select id="selectOrder" resultType="edu.beihua.KarryCode.entity.Order">
+        select *
+        from orders
+        <where>
+            <if test="customer!=null">
+                orders.customer_name = #{customer.name}
+            </if>
+            <if test="cha!=null">
+                and orders.order_return = #{cha}
+            </if>
+        </where>
+    </select>
+    <select id="selectOrder_ByLNR" resultType="edu.beihua.KarryCode.entity.Order">
+        select *
+        from orders
+        where Vehicle_license=#{license}
+          and orders.customer_name = #{CName}
+          and orders.order_return = #{OrderReturn};
+    </select>
+    <select id="selectOrder_Customer" resultMap="OrderResultMap">
+        SELECT o.order_id,
+               o.customer_name,
+               o.Vehicle_license,
+               DATE_FORMAT(o.order_borrowdate,'%Y-%m-%d') borrowdate,
+               DATE_FORMAT(o.order_returndate,'%Y-%m-%d') returndate,
+               o.order_fee, o.order_return, c.customer_id,
+               c.customer_name, c.customer_password, c.customer_Email,
+               c.customer_Phone, c.customer_money, v.Vehicle_id,
+               v.Vehicle_license, v.Vehicle_name,
+               v.Vehicle_rent, v.Vehicle_state
+        FROM orders o, customers c, vehicle v
+        WHERE o.customer_name = c.customer_name
+          AND v.Vehicle_license = o.Vehicle_license
+          AND o.Vehicle_license = #{license}
+          AND o.order_return = false;
+    </select>
+    <resultMap id="OrderResultMap" type="edu.beihua.KarryCode.entity.Order">
+        <id property="order_id" column="order_id"/>
+        <result property="customer_name" column="customer_name"/>
+        <result property="Vehicle_license" column="Vehicle_license"/>
+        <result property="order_borrowdate" column="borrowdate" jdbcType="VARCHAR" javaType="java.lang.String"/>
+        <result property="order_returndate" column="returndate" jdbcType="VARCHAR" javaType="java.lang.String"/>
+        <result property="order_fee" column="order_fee"/>
+        <result property="order_return" column="order_return"/>
+        <association property="customer" javaType="edu.beihua.KarryCode.entity.Customer">
+            <id property="name" column="customer_name"/>
+            <result property="id" column="customer_id"/>
+            <result property="password" column="customer_password"/>
+            <result property="customer_Email" column="customer_Email"/>
+            <result property="customer_Phone" column="customer_Phone"/>
+            <result property="customer_money" column="customer_money"/>
+        </association>
+        <association property="vehicle" javaType="edu.beihua.KarryCode.entity.Vehicle">
+            <result property="Vehicle_id" column="Vehicle_id"/>
+            <result property="Vehicle_license" column="Vehicle_license"/>
+            <result property="Vehicle_name" column="Vehicle_name"/>
+            <result property="Vehicle_rent" column="Vehicle_rent"/>
+            <result property="Vehicle_state" column="Vehicle_state"/>
+        </association>
+    </resultMap>
+</mapper>
