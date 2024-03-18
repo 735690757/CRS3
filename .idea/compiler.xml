@@ -2,12 +2,16 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
       <profile name="Maven default annotation processors profile" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="Car_Rental_System_2.5" />
+        <module name="0" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="Car_Rental_System_3.0" target="1.8" />
+    </bytecodeTargetLevel>
   </component>
 </project>

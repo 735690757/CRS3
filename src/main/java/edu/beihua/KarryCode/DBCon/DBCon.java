@@ -3,10 +3,11 @@ package edu.beihua.KarryCode.DBCon;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.io.InputStream;
-
+@Component
 public class DBCon {
     public SqlSessionFactory sqlSessionFactory(){
         SqlSessionFactory sqlSessionFactory = null;

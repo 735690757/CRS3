@@ -5,8 +5,7 @@ import edu.beihua.KarryCode.entity.Customer;
 
 public interface IMessageService {
     void showAllMessage();
-    void showAllMessageAll();
-
+    void showAllMessageAll(Admin admin);
     boolean somethingToSay(Customer customer);
     boolean commentControl(Admin admin);
 }

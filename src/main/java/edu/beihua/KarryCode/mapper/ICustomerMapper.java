@@ -1,12 +1,13 @@
 package edu.beihua.KarryCode.mapper;
 
 import edu.beihua.KarryCode.entity.Customer;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
-
+@Mapper
 public interface ICustomerMapper {
     Customer selectBy_CName_CPass(@Param("name") String name,
                                   @Param("pass") String pass);

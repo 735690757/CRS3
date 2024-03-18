@@ -57,6 +57,12 @@
           AND o.Vehicle_license = #{license}
           AND o.order_return = false;
     </select>
+    <select id="selectCustomerVehicle" resultType="edu.beihua.KarryCode.entity.CustomerVehicle">
+        select customer_name,Vehicle_name
+        from (select customer_name,Vehicle_name
+              from orders , vehicle where orders.Vehicle_license=vehicle.Vehicle_license) xx
+        group by customer_name, Vehicle_name
+    </select>
     <resultMap id="OrderResultMap" type="edu.beihua.KarryCode.entity.Order">
         <id property="order_id" column="order_id"/>
         <result property="customer_name" column="customer_name"/>

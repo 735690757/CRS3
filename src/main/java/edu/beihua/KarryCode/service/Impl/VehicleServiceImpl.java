@@ -3,19 +3,21 @@ package edu.beihua.KarryCode.service.Impl;
 import edu.beihua.KarryCode.DBCon.DBCon;
 import edu.beihua.KarryCode.entity.Admin;
 import edu.beihua.KarryCode.entity.Vehicle;
-import edu.beihua.KarryCode.mapper.ICustomerMapper;
 import edu.beihua.KarryCode.mapper.IVehicleMapper;
+import edu.beihua.KarryCode.repositoryRedis.generic.RedisRepGeneric;
 import edu.beihua.KarryCode.service.IVehicleService;
 import edu.beihua.KarryCode.tools.AccountUtility;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Scanner;
-
+@Service
 public class VehicleServiceImpl implements IVehicleService {
+    @Autowired
+    RedisRepGeneric redisRepGeneric;
 
     DBCon dbCon = new DBCon();
     SqlSessionFactory sqlSessionFactory = dbCon.sqlSessionFactory();

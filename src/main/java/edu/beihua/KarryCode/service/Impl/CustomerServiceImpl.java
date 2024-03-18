@@ -5,19 +5,26 @@ import edu.beihua.KarryCode.DBCon.DBCon;
 import edu.beihua.KarryCode.entity.Admin;
 import edu.beihua.KarryCode.entity.Customer;
 import edu.beihua.KarryCode.mapper.ICustomerMapper;
+import edu.beihua.KarryCode.repositoryMongo.IUserRepMongo;
 import edu.beihua.KarryCode.service.ICustomerService;
 import edu.beihua.KarryCode.tools.AccountUtility;
 import edu.beihua.KarryCode.tools.EmailValidator;
+import edu.beihua.KarryCode.tools.Permissions;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Scanner;
-
+@Service
 public class CustomerServiceImpl implements ICustomerService {
+    @Autowired
+    IUserRepMongo iUserRepMongo;
     DBCon dbCon = new DBCon();
+
     SqlSessionFactory sqlSessionFactory = dbCon.sqlSessionFactory();
 
     Scanner scanner = new Scanner(System.in);
@@ -34,7 +41,6 @@ public class CustomerServiceImpl implements ICustomerService {
     @Override
     public Customer Login() {
         SqlSession sqlSession = sqlSessionFactory.openSession();
-
         ICustomerMapper iCustomerMapper = sqlSession.getMapper(ICustomerMapper.class);
 
         System.out.println("——————————————————用户登录——————————————————");
@@ -51,10 +57,14 @@ public class CustomerServiceImpl implements ICustomerService {
         Customer customer = iCustomerMapper.selectBy_CName_CPass(name, pass);
         if (customer==null){
             System.out.println("用户名不存在或密码错误");
+            // * @Author KarryLiu_刘珂瑞 * @Description TODO MongoDB记录登录失败日志
+            iUserRepMongo.Log_UserLoginFailure(name,Permissions.VISITOR);
             return null;
         }else {
             System.out.println("");
             System.out.println("欢迎:"+customer.getName()+"回来！");
+            // * @Author KarryLiu_刘珂瑞 * @Description TODO MongoDB记录成功登录日志
+            iUserRepMongo.Log_UserLoginSuccess(customer, Permissions.CUSTOMER);
             return customer;
         }
     }

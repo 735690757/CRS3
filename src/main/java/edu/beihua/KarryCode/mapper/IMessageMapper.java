@@ -2,13 +2,10 @@ package edu.beihua.KarryCode.mapper;
 
 import edu.beihua.KarryCode.entity.Customer;
 import edu.beihua.KarryCode.entity.Message;
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
-
+@Mapper
 public interface IMessageMapper {
     List<Message> selectAllMessage();
     List<Message> selectAllMessageAll();

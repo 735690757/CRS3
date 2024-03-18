@@ -1,12 +1,13 @@
 package edu.beihua.KarryCode.mapper;
 
 import edu.beihua.KarryCode.entity.Vehicle;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
-
+@Mapper
 public interface IVehicleMapper {
     List<Vehicle> selectLimit10(@Param("start") int start,
                                 @Param("end") int end);

@@ -1,12 +1,14 @@
 package edu.beihua.KarryCode.mapper;
 
 import edu.beihua.KarryCode.entity.Customer;
+import edu.beihua.KarryCode.entity.CustomerVehicle;
 import edu.beihua.KarryCode.entity.Order;
 import edu.beihua.KarryCode.entity.Vehicle;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
-
+@Mapper
 public interface IOrderMapper {
     int insertOrder(Order order);
     List<Order> selectOrder(@Param("customer") Customer customer,
@@ -17,4 +19,5 @@ public interface IOrderMapper {
     int updateOrderReturnDateAndSta_ByOrderId(@Param("date") String date,
                                               @Param("id") int OrderId);
     Order selectOrder_Customer(@Param("license") String license);
+    List<CustomerVehicle> selectCustomerVehicle();
 }

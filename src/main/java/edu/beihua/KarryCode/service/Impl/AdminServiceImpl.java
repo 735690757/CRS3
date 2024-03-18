@@ -5,21 +5,31 @@ import edu.beihua.KarryCode.DBCon.DBCon;
 import edu.beihua.KarryCode.entity.Admin;
 import edu.beihua.KarryCode.mapper.IAdminMapper;
 import edu.beihua.KarryCode.mapper.ICustomerMapper;
+import edu.beihua.KarryCode.repositoryMongo.IUserRepMongo;
 import edu.beihua.KarryCode.service.*;
 import edu.beihua.KarryCode.tools.AccountUtility;
+import edu.beihua.KarryCode.tools.Permissions;
 import edu.beihua.KarryCode.view.PanelView;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.sql.ResultSet;
 import java.util.Scanner;
 
 import static edu.beihua.KarryCode.Command_Control.CommandView.examine;
-
+@Service
 public class AdminServiceImpl implements IAdminService {
+    @Autowired
+    IUserRepMongo iUserRepMongo;
+    @Autowired
+    IUserServiceMongo iUserServiceMongo;
     Scanner scanner = new Scanner(System.in);
-    IMessageService iMessageService = new MessageServiceImpl();
+    @Autowired
+    IMessageService iMessageService;
     DBCon dbCon = new DBCon();
+
     SqlSessionFactory sqlSessionFactory = dbCon.sqlSessionFactory();
     public<T> boolean examine(T s){
         String ss=(String) s;
@@ -49,18 +59,23 @@ public class AdminServiceImpl implements IAdminService {
         Admin admin = iAdminMapper.Login(name,pass);
         if (admin==null){
             System.out.println("管理员账号或密码错误！");
+            iUserRepMongo.Log_UserLoginFailure(name, Permissions.VISITOR);
             AccountUtility.readReturn();
             return null;
         }else {
             System.out.println("欢迎："+admin.getName()+"超级管理员");
             //System.out.println(admin.toString());
+            iUserRepMongo.Log_UserLoginSuccess(admin,Permissions.ADMIN);
             AccountUtility.readReturn();
             return admin;
         }
     }
-    ICustomerService iCustomerService = new CustomerServiceImpl();
-    IVehicleService iVehicleService = new VehicleServiceImpl();
-    IOrderService iOrderService = new OrderServiceImpl();
+    @Autowired
+    ICustomerService iCustomerService;
+    @Autowired
+    IVehicleService iVehicleService;
+    @Autowired
+    IOrderService iOrderService;
     @Override
     public void AdminView(Admin admin) {
 
@@ -167,8 +182,13 @@ public class AdminServiceImpl implements IAdminService {
                     System.out.println("——————————————————指定车牌号，查看车辆租赁占用信息———————————————");
                     iOrderService.occupancyInformation();
                     break;
+                }case 8:{
+                    System.out.println("——————————————————登录日志操纵集———————————————");
+                    // * @Author KarryLiu_刘珂瑞 * @Description TODO 对UserRepMongo的删改查
+                    iUserServiceMongo.ShowAllUserRepMongo();
+                    break;
                 }
-                case 8:{
+                case 10:{
                     System.out.println("——————————————————退出————————————————");
                     AccountUtility.readReturn();
                     return;

@@ -8,18 +8,23 @@ import edu.beihua.KarryCode.entity.Vehicle;
 import edu.beihua.KarryCode.mapper.ICustomerMapper;
 import edu.beihua.KarryCode.mapper.IOrderMapper;
 import edu.beihua.KarryCode.mapper.IVehicleMapper;
+import edu.beihua.KarryCode.repositoryRedis.generic.RedisRepGeneric;
 import edu.beihua.KarryCode.service.IOrderService;
 import edu.beihua.KarryCode.service.IVehicleService;
 import edu.beihua.KarryCode.tools.AccountUtility;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
-
+@Service
 public class OrderServiceImpl implements IOrderService {
+    @Autowired
+    RedisRepGeneric redisRepGeneric;
     double deposit=7000;
 
     IVehicleService iVehicleService = new VehicleServiceImpl();
@@ -66,7 +71,7 @@ public class OrderServiceImpl implements IOrderService {
             System.out.println("|车牌号："+vehicle.getVehicle_license());
             System.out.println("|租金:"+vehicle.getVehicle_rent()+" 元/月");
             System.out.println("|押金："+deposit);
-
+            redisRepGeneric.takePointsForScoreLead(vehicle.getVehicle_name(),5);
             int cusWantDays;
             while (true){
                 System.out.println("|请输入你要租的月数(最小月数：3月)：");
@@ -131,6 +136,7 @@ public class OrderServiceImpl implements IOrderService {
                                 "|___/\\__,_|\\___\\___\\___||___/___/\n" +
                                 "                                 \033[0m\n");
                         sqlSession.commit();
+                        redisRepGeneric.takePointsForScoreLead(vehicle.getVehicle_name(),20);
                         AccountUtility.readReturn();
                         return true;
                     }else{
